@@ -1,6 +1,6 @@
 
 {% block inputtingTask %}
 <p class="lead text-justify m-sm" data-id="{{i.id}}">{{i.task}}</p>
-<button class="btn btn-outline-secondary" type="button" id="{{i.id}}" onclick="markComplete(this)">Complete</button>
-<button class="btn btn-outline-secondary" type="button" id="{{i.id}}" onclick="markDelete()">Delete</button>
+<button class="btn btn-outline-secondary" type="button" data-id="{{i.id}}" onclick="markComplete(this)">Complete</button>
+<button class="btn btn-outline-secondary" type="button" data-id="{{i.id}}" onclick="markDelete(this)">Delete</button>
 {% endblock %}
