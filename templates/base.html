@@ -8,7 +8,7 @@
 <body>
     <div class="container" id="main">
         {%for i in String%}
-        <div class="row">
+        <div class="row" id= {{i.id}}>
             <div class="col-12 d-flex justify-content-center ">
                 <div class="input-group d-flex justify-content-center">
                     {% include "child.html" %}
@@ -27,6 +27,7 @@
         </div>
     </div>
 <script src="{{ url_for('static', path='/POSTTask.js') }}"></script>
+<script src="{{ url_for('static', path='/DelCom.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 </html>

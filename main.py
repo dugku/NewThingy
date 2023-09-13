@@ -37,7 +37,7 @@ async def root(request: Request,db: Session = Depends(get_db)):
     tasks = db.query(models.TaskQue).all()
 
     # Transform the tasks into a list of dictionaries
-    task_list = [{'task': task.String_Todo, 'due_date': task.due_date, 'complete': task.complete} for task in tasks]
+    task_list = [{'id': task.task_id,'task': task.String_Todo, 'due_date': task.due_date, 'complete': task.complete} for task in tasks]
 
     context = {
         'request': request, 
@@ -55,13 +55,34 @@ async def input_Todo(todo: Todo, db: Session = Depends(get_db)):
     db.commit()
     return {'message': "Completed"} 
 
-@app.get("/get_todos", )   
-async def get_todo(db: Session = Depends(get_db)):
-    return db.query(models.TaskQue).all()
+@app.get("/todo/{taskinpu}")   
+async def get_todo(taskinpu: str, db: Session = Depends(get_db)):
+    return db.query(models.TaskQue).filter(models.TaskQue.String_Todo == taskinpu).first()
+
+@app.put("/complete/{task_id}")
+async def complete_todo(task_id: int,db: Session = Depends(get_db)):
+    change_complete = db.query(models.TaskQue).filter(models.TaskQue.task_id == task_id).update({"complete": True})
+
+    if change_complete == None:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    db.commit()
+    return {"Does it work?": "Maybe"}
+
 
 @app.delete('/delete/{task_id}')
 async def delete_tas(task_id: int,db: Session = Depends(get_db)):
     change_complete = db.query(models.TaskQue).filter(models.TaskQue.task_id == task_id).delete()
+
+    if change_complete == None:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    db.commit()
+    return{"message":"Deleted"}
+
+@app.delete('/delete')
+async def delete_tas(db: Session = Depends(get_db)):
+    change_complete = db.query(models.TaskQue).delete()
 
     if change_complete == None:
         raise HTTPException(status_code=404, detail="Task not found")

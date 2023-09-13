@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var niceBut = document.getElementById("NiceBut");
     if (niceBut) {
-        niceBut.addEventListener("click", () => {
+        niceBut.addEventListener("click", async () => {
             input = document.getElementById("taskinput").value;
             console.log(input);
             var htt = new XMLHttpRequest();
@@ -15,61 +15,55 @@ document.addEventListener("DOMContentLoaded", function () {
                 'due_date': "wip"
             }));
 
-            var gethtt  = new XMLHttpRequest();
+            await fetch(`http://127.0.0.1:8000/todo/${input}`)
+            .then(async (res) => {
+                let yes = await res.json();
 
-            gethtt.open("GET", "http://127.0.0.1:8000/get_todos")
+                const row = document.createElement('div');
+                const col = document.createElement('div');
+                const inputGroup = document.createElement('div');
+                const para = document.createElement('p');
+                const butCom = document.createElement('button');
+                const butDel = document.createElement('button');
 
-
-            gethtt.onload = () =>{
-                const data = gethtt.response
+                row.classList.add("row");
+                row.setAttribute('id', yes.task_id)
+                col.classList.add("col-12", "d-flex", "justify-content-center");
+                inputGroup.classList.add("input-group", "d-flex", "justify-content-center");
+                para.classList.add("lead", "text-justify", "m-sm");
+                para.innerText = yes.String_Todo;
+                butCom.classList.add("btn", "btn-outline-secondary");
+                butCom.setAttribute('id', yes.task_id)
+                butCom.addEventListener("click", () => {
+                    console.log("Hello")
+                })
+                butCom.type = "button";
+                butCom.innerText = "Complete";
+                butDel.classList.add("btn", "btn-outline-secondary");
+                butDel.addEventListener("click", () => {
+                    console.log("Hello!")
+                })
+                butDel.setAttribute('id', yes.task_id)
+                butDel.type = "button";
+                butDel.innerText = "Delete";
                 
-                const row = document.createElement('div')
-                const col = document.createElement('div')
-                const inputGroup = document.createElement('div')
-                const para = document.createElement('p')
-                const butCom = document.createElement('button')
-                const butDel = document.createElement('button')
-
-                row.classList.add("row")
-                col.classList.add("col-12","d-flex","justify-content-center")
-                inputGroup.classList.add("input-group","d-flex","justify-content-center")
-                para.classList.add("lead", "text-justify", "m-sm")
-                para.innerText = "Hi!"
-                butCom.classList.add("btn", "btn-outline-secondary")
-                butCom.type = "button"
-                butCom.innerText = "Complete"
-                butDel.classList.add("btn", "btn-outline-secondary")
-                butDel.type = "button"
-                butDel.innerText = "Delete"
-
-                const last = data[-1];
-
-                console.log(last)
-                
-                const lastDict = last['String_Todo'];
-
-                console.log(lastDict)
-
                 const inputList = [
                     para,
                     butCom,
                     butDel
                 ]
-
-                const container = document.getElementById("main")
-                const childRow = document.getElementById("child")
-
+    
+                const container = document.getElementById("main");
+                const childRow = document.getElementById("child");
+    
                 inputList.forEach((Dom) =>{
                     inputGroup.appendChild(Dom);
                 });
-            
-                col.appendChild(inputGroup)
-                row.appendChild(col)
-                container.insertBefore(row, container.firstChild)
-                }
 
-            gethtt.send();
-
-        });
-    }
+                col.appendChild(inputGroup);
+                row.appendChild(col);
+                container.insertBefore(row, container.firstChild);
+            });
+    });
+}
 });
